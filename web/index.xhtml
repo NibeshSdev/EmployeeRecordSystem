@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Employee Record System</title>
+
+        <h:outputStylesheet library="css" name="style.css"/>
+    </h:head>
+    <h:body>
+        <div id="top-container">
+            <h2>F1Soft || Employee Record System</h2>
+            <h:form>
+                <table>
+                    <tr>
+                        <td><h:outputLabel for="employeeId">
+                                <h:outputText value="Employee Id :"/>
+                            </h:outputLabel>
+                        </td>
+                        <td>
+                            <h:inputText id="employeeId" value="#{employee.employeeId}" required="true" requiredMessage="Employee Id is required"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h:outputLabel for="name">
+                                <h:outputText value="Name :"/>
+                            </h:outputLabel>
+                        </td>
+                        <td>
+                            <h:inputText id="name" value="#{employee.name}" required="true" requiredMessage="Name is required"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h:outputLabel for="email">
+                                <h:outputText value="Email :"/>
+                            </h:outputLabel>
+                        </td>
+                        <td>
+                            <h:inputText id="email" required="true" value="#{employee.email}" requiredMessage="Email is required"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h:outputLabel for="post">
+                                <h:outputText value="Post :"/>
+                            </h:outputLabel>
+                        </td>
+                        <td>
+                            <h:inputText id="post" value="#{employee.post}" required="true" requiredMessage="Post is required"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h:outputLabel for="address">
+                                <h:outputText value="Address :"/>
+                            </h:outputLabel>
+                        </td>
+                        <td>
+                            <h:inputText id="address" value="#{employee.address}" required="true" requiredMessage="Address is required"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h:outputLabel for="mobileNumber">
+                                <h:outputText value="MobileNumber :"/>
+                            </h:outputLabel>
+                        </td>
+                        <td>
+                            <h:inputText id="mobileNumber" value="#{employee.mobileNumber}" required="true" requiredMessage="MobileNumber is required"/>
+                        </td>
+                    </tr>
+                </table>
+                <div style="margin-top: 20px">
+                    <h:commandButton value="Save" class="button-save" actionListener="#{employee.save}"/>
+                    <h:commandButton value="Cancel" class="button-cancel" actionListener="#{employee.cancel}"/>
+                </div>
+            </h:form>
+        </div>
+        <div id="bottom-container">
+            <div class="table-title">
+                <h3><h:outputText value="Employee List" /></h3>
+            </div>  
+            <h:dataTable id="data-table" value="#{employee.employeeList}" var="el"  
+                         binding="#{employee.dataTableEmployee}"
+                         styleClass="employee"
+                         cellspacing="0" 
+                         cellpadding="0" 
+                         border="0"
+                         rowClasses="odd,even">
+                <h:column>
+                    <f:facet name="header">Employee Id</f:facet>
+                    <h:outputText value="#{el.employeeId}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Employee Name</f:facet>
+                    <h:outputText value="#{el.name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Email</f:facet>
+                    <h:outputText value="#{el.email}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Post</f:facet>
+                    <h:outputText value="#{el.post}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Address</f:facet>
+                    <h:outputText value="#{el.address}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Mobile Number</f:facet>
+                    <h:outputText value="#{el.mobileNumber}"/>
+                </h:column>
+                <h:column>
+                    <h:form id="buttons">
+                        <f:facet name="header">Functions</f:facet>
+                        <h:commandButton id="updateEmp" value="update" actionListener="#{employee.update}"/>
+                        <h:commandButton id="deleteEmp" value="delete" actionListener="#{employee.delete}"/>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+
+        </div>
+    </h:body>
+</html>
+
