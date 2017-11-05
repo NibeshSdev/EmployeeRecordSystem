@@ -2,15 +2,24 @@
 package com.f1soft.employeerecordsystem;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.html.HtmlDataTable;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -18,27 +27,41 @@ import javax.validation.constraints.NotNull;
  */
 
 @ManagedBean(name = "employee")
-@SessionScoped
-public class Employee {
+@RequestScoped
+public class Employee implements Serializable{
+    
     
     private int employeeId;
+    
+    @NotNull(message = "Name cannot be null")
     private String name;
+    
+    @NotNull(message = "Email cannot be null")
+    @Pattern(regexp = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Email is not valid")
     private String email;
+    
     private String post;
     private String address;
-    private long mobileNumber;
     
-    private boolean updateFlag = false;
-    private int updateObjIndex = -1;
-    private List<Employee> employeeList= new ArrayList<>();
+    @Pattern(regexp = "^([0-9-]*)$", message = "Numbers only")
+    @Size(min=10, max=10, message = "Mobile number must be of 10 digit" )
+    private String mobileNumber;
+    
+    private static int IdCount = 4;
+    private static boolean updateFlag = false;
+    private static int updateObjIndex = -1;
     private HtmlDataTable dataTableEmployee;
+    private static List<Employee> employeeList= new ArrayList<Employee>(){{
+        add(new Employee(1, "Nibesh", "sdev.nibs@gamil.com", "Java Developer", "Bhaktapur", "9813265462"));
+        add(new Employee(2, "Suraj", "suraj@gamil.com", "Java Developer", "Kathmandu", "9813789456"));
+        add(new Employee(3, "Rajendra", "rajendra@gamil.com", "Sr. Java Developer", "Bhaktapur", "9841785236"));
+    }};
+    
     
     public Employee() {
-         employeeList.add(new Employee(1, "Nibesh", "sdev.nibs@gmail.com", "Jr. Java Developer", "Bhaktapur", 9813265462l));
-        employeeList.add(new Employee(2, "Suraj", "teamwarrior11@gmail.com", "Jr. Java Developer", "Baneshwor", 9813987456l));
     }
 
-    public Employee(int employeeId, String name, String email, String post, String address, long mobileNumber) {
+    public Employee(int employeeId, String name, String email, String post, String address, String mobileNumber) {
         this.employeeId = employeeId;
         this.name = name;
         this.email = email;
@@ -50,8 +73,10 @@ public class Employee {
     public void save(ActionEvent event){
         Employee e = new Employee(employeeId, name, email, address, post, mobileNumber);
         if(!updateFlag){
+            e.employeeId = IdCount;
             employeeList.add(e);
             clearFields();
+            IdCount++;
         }else{
             employeeList.remove(updateObjIndex);
             employeeList.add(e);
@@ -73,13 +98,17 @@ public class Employee {
     }
     
     public void delete() throws IOException{
-        int index = dataTableEmployee.getRowIndex();
-        Employee e = (Employee) dataTableEmployee.getRowData();
-        employeeList.remove(e);
+//        Employee e = (Employee) dataTableEmployee.getRowData();
+//        employeeList.remove(e);
+       
+        boolean removeIf = employeeList.removeIf((Employee employee) -> (employee.getEmployeeId()== employeeId));
+        this.updateFlag = false;
+        this.updateObjIndex = -1;
     }
     
-    public void cancel(ActionEvent event){
+    public String cancel(){
         clearFields();
+        return "index.xhtml";
     }
     
     public void clearFields(){
@@ -88,11 +117,11 @@ public class Employee {
         this.email = null;
         this.post = null;
         this.address = null;
-        this.mobileNumber = 0;
+        this.mobileNumber = null;
         this.updateFlag = false;
         this.updateObjIndex = -1;
     }
-
+    
     public String getName() {
         return name;
     }
@@ -125,11 +154,11 @@ public class Employee {
         this.address = address;
     }
 
-    public long getMobileNumber() {
+    public String getMobileNumber() {
         return mobileNumber;
     }
 
-    public void setMobileNumber(long mobileNumber) {
+    public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
 

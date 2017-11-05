@@ -19,7 +19,8 @@
                             </h:outputLabel>
                         </td>
                         <td>
-                            <h:inputText id="employeeId" value="#{employee.employeeId}" required="true" requiredMessage="Employee Id is required"/>
+                            <h:inputText id="employeeId" readonly="#{not facesContext.postback or facesContext.renderResponse}"
+                                         value="#{employee.employeeId}"  />                     
                         </td>
                     </tr>
                     <tr>
@@ -28,8 +29,9 @@
                             </h:outputLabel>
                         </td>
                         <td>
-                            <h:inputText id="name" value="#{employee.name}" required="true" requiredMessage="Name is required"/>
+                            <h:inputText id="name" value="#{employee.name}" required="true" requiredMessage="Name is required" />
                         </td>
+                         <td><h:message for="name" style="color:red" /></td>
                     </tr>
                     <tr>
                         <td><h:outputLabel for="email">
@@ -37,8 +39,11 @@
                             </h:outputLabel>
                         </td>
                         <td>
-                            <h:inputText id="email" required="true" value="#{employee.email}" requiredMessage="Email is required"/>
+                            <h:inputText id="email" required="true" value="#{employee.email}" requiredMessage="Email is required">
+                                <f:validateBean/>
+                            </h:inputText>
                         </td>
+                        <td><h:message for="email" style="color:red" /></td>
                     </tr>
                     <tr>
                         <td><h:outputLabel for="post">
@@ -48,6 +53,7 @@
                         <td>
                             <h:inputText id="post" value="#{employee.post}" required="true" requiredMessage="Post is required"/>
                         </td>
+                        <td><h:message for="post" style="color:red" /></td>
                     </tr>
                     <tr>
                         <td><h:outputLabel for="address">
@@ -57,6 +63,7 @@
                         <td>
                             <h:inputText id="address" value="#{employee.address}" required="true" requiredMessage="Address is required"/>
                         </td>
+                         <td><h:message for="address" style="color:red" /></td>
                     </tr>
                     <tr>
                         <td><h:outputLabel for="mobileNumber">
@@ -64,13 +71,16 @@
                             </h:outputLabel>
                         </td>
                         <td>
-                            <h:inputText id="mobileNumber" value="#{employee.mobileNumber}" required="true" requiredMessage="MobileNumber is required"/>
+                            <h:inputText id="mobileNumber" value="#{employee.mobileNumber}" required="true" requiredMessage="Mobile number is required">
+                                <f:validateBean/>
+                            </h:inputText>
                         </td>
+                         <td><h:messages for="mobileNumber" style="color:red" /></td>
                     </tr>
                 </table>
                 <div style="margin-top: 20px">
                     <h:commandButton value="Save" class="button-save" actionListener="#{employee.save}"/>
-                    <h:commandButton value="Cancel" class="button-cancel" actionListener="#{employee.cancel}"/>
+                    <h:commandButton value="Cancel" class="button-cancel" immediate="true" action="#{employee.cancel}"/>
                 </div>
             </h:form>
         </div>
@@ -85,35 +95,36 @@
                          cellpadding="0" 
                          border="0"
                          rowClasses="odd,even">
-                <h:column>
+                <h:column id="column-id">
                     <f:facet name="header">Employee Id</f:facet>
                     <h:outputText value="#{el.employeeId}"/>
                 </h:column>
-                <h:column>
+                <h:column id="column-name">
                     <f:facet name="header">Employee Name</f:facet>
                     <h:outputText value="#{el.name}"/>
                 </h:column>
-                <h:column>
+                <h:column id="column-email" >
                     <f:facet name="header">Email</f:facet>
                     <h:outputText value="#{el.email}"/>
                 </h:column>
-                <h:column>
+                <h:column id="column-post">
                     <f:facet name="header">Post</f:facet>
                     <h:outputText value="#{el.post}"/>
                 </h:column>
-                <h:column>
+                <h:column id="column-address">
                     <f:facet name="header">Address</f:facet>
                     <h:outputText value="#{el.address}"/>
                 </h:column>
-                <h:column>
+                <h:column id="column-mobile">
                     <f:facet name="header">Mobile Number</f:facet>
                     <h:outputText value="#{el.mobileNumber}"/>
                 </h:column>
-                <h:column>
+                <h:column id="column-buttons">
                     <h:form id="buttons">
-                        <f:facet name="header">Functions</f:facet>
                         <h:commandButton id="updateEmp" value="update" actionListener="#{employee.update}"/>
-                        <h:commandButton id="deleteEmp" value="delete" actionListener="#{employee.delete}"/>
+                        <h:commandButton id="deleteEmp" value="delete" action="#{employee.delete}">
+                            <f:setPropertyActionListener target="#{employee.employeeId}" value="#{el.employeeId}"/>
+                        </h:commandButton>
                     </h:form>
                 </h:column>
             </h:dataTable>
